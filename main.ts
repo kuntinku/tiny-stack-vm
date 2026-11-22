@@ -1,4 +1,3 @@
-// Tiny stack VM for make.fun's tiny-stack-vm-01-run-20261122 bounty.
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -54,8 +53,8 @@ function binop(name, a, b) {
     case 'LTU': return (a >>> 0) < (b >>> 0) ? 1 : 0;
   }
 }
-const BINARY = new Set(['ADD','SUB','MUL','DIV','MOD','DIVU','MODU','AND','OR','XOR',
-  'SHL','SHR','SHRU','EQ','LT','LTU']);
+const BINARY = new Set(['ADD','SUB','MUL','DIV','MOD','DIVU','MODU','AND','OR',
+  'XOR','SHL','SHR','SHRU','EQ','LT','LTU']);
 
 function run(program, input) {
   const n = program.length;
@@ -80,6 +79,7 @@ function run(program, input) {
     steps++;
     pc = next;
     if (BINARY.has(name)) {
+      // the divisor is tested first, so the helper need not signal div-zero
       if ((name === 'DIV' || name === 'MOD' || name === 'DIVU' || name === 'MODU') && D[sp - 1] === 0) {
         return stop(T_DIV0);
       }
